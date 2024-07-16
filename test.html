@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>과목 선택 도우미</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        button {
+            margin: 10px 0;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        .question {
+            display: none;
+        }
+        .question.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>과목 선택 도우미</h1>
+        
+        <div id="question1" class="question active">
+            <h2>학년을 선택하세요:</h2>
+            <button onclick="selectYear('1학년')">1학년</button>
+            <button onclick="selectYear('2학년')">2학년</button>
+        </div>
+        
+        <div id="question2_1학년" class="question">
+            <h2>계열을 선택하세요 (1학년):</h2>
+            <button onclick="selectCategory('1학년', '인문')">인문계열</button>
+            <button onclick="selectCategory('1학년', '자연')">자연계열</button>
+            <button onclick="selectCategory('1학년', '예체능')">예체능계열</button>
+        </div>
+        <div id="question2_2학년" class="question">
+            <h2>계열을 선택하세요 (2학년):</h2>
+            <button onclick="selectCategory('2학년', '인문')">인문계열</button>
+            <button onclick="selectCategory('2학년', '자연')">자연계열</button>
+            <button onclick="selectCategory('2학년', '예체능')">예체능계열</button>
+        </div>
+        
+        <!-- 1학년 질문 -->
+        <div id="question3_1학년_인문" class="question">
+            <h2>인문계열 (1학년)</h2>
+            <button onclick="showResult('기하 과목 추천')">상경</button>
+            <button onclick="showResult('세계사, 경제, 세계지리, 생활윤리 중 선택')">인문</button>
+        </div>
+        <div id="question3_1학년_자연" class="question">
+            <h2>자연계열 (1학년)</h2>
+            <button onclick="showResult('물리, 화학, 생명과학, 지구과학 중 택, 기하(인공지능) 꼭 선택')">공학</button>
+            <button onclick="showResult('물리, 화학, 생명과학, 지구과학 중 택, 생명과학 꼭 선택')">의료</button>
+        </div>
+        <div id="question3_1학년_예체능" class="question">
+            <h2>예체능계열 (1학년)</h2>
+            <button onclick="showResult('세계지리, 세계사, 생활 체육 선택')">체육</button>
+            <button onclick="showResult('인문계열 선택 과목 + 생활한문 선택')">음악, 미술</button>
+        </div>
+
+        <!-- 2학년 질문 -->
+        <div id="question3_2학년_인문" class="question">
+            <h2>인문계열 (2학년)</h2>
+            <button onclick="showResult('지리, 사문, 윤사, 정법 중 선택')">과목 선택 완료</button>
+        </div>
+        <div id="question3_2학년_자연" class="question">
+            <h2>자연계열 (2학년)</h2>
+            <button onclick="selectSubCategory('2학년', '공과')">공과</button>
+            <button onclick="selectSubCategory('2학년', '컴퓨터')">컴퓨터 계열</button>
+            <button onclick="showResult('화학2 필수 선택')">의약</button>
+        </div>
+        <div id="question3_2학년_예체능" class="question">
+            <h2>예체능계열 (2학년)</h2>
+            <button onclick="showResult('스포츠 경기 체력 선택')">체육</button>
+        </div>
+
+        <!-- 2학년 세부 질문 -->
+        <div id="question4_2학년_공과" class="question">
+            <h2>공과 (2학년)</h2>
+            <button onclick="showResult('물리2, 화학2 or 지구2 선택, 공학일반 선택')">과목 선택 완료</button>
+        </div>
+        <div id="question4_2학년_컴퓨터" class="question">
+            <h2>컴퓨터 계열 (2학년)</h2>
+            <button onclick="showResult('물리2, 화학2 or 지구2 선택, 빅데이터 선택')">과목 선택 완료</button>
+        </div>
+        
+        <div id="result" class="result">
+            <h2>추천 과목</h2>
+            <div id="selectedSubjects"></div>
+            <button onclick="restart()">다시 시작</button>
+        </div>
+    </div>
+
+    <script>
+        let year = '';
+
+        function selectYear(selectedYear) {
+            year = selectedYear;
+            document.querySelectorAll('.question').forEach(el => el.classList.remove('active'));
+            document.getElementById(`question2_${year}`).classList.add('active');
+        }
+
+        function selectCategory(year, category) {
+            document.querySelectorAll('.question').forEach(el => el.classList.remove('active'));
+            document.getElementById(`question3_${year}_${category}`).classList.add('active');
+        }
+
+        function selectSubCategory(year, subCategory) {
+            document.querySelectorAll('.question').forEach(el => el.classList.remove('active'));
+            document.getElementById(`question4_${year}_${subCategory.replace(', ', '_')}`).classList.add('active');
+        }
+
+        function showResult(recommendedSubject) {
+            document.querySelectorAll('.question').forEach(el => el.classList.remove('active'));
+            document.getElementById('result').classList.add('active');
+            document.getElementById('selectedSubjects').innerText = recommendedSubject;
+        }
+
+        function restart() {
+            document.querySelectorAll('.question, .result').forEach(el => el.classList.remove('active'));
+            document.getElementById('question1').classList.add('active');
+            document.getElementById('selectedSubjects').innerText = '';
+            year = '';
+        }
+    </script>
+</body>
+</html>
