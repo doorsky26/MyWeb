@@ -105,16 +105,6 @@
             <h2>예체능계열 (2학년)</h2>
             <button onclick="showResult('스포츠 경기 체력 선택')">체육</button>
         </div>
-
-        <!-- 2학년 세부 질문 -->
-        <div id="question4_2학년_공과" class="question">
-            <h2>공과 (2학년)</h2>
-            <button onclick="showResult('물리2, 화학2 or 지구2 선택, 공학일반 선택')">추천 과목 보기</button>
-        </div>
-        <div id="question4_2학년_컴퓨터" class="question">
-            <h2>컴퓨터 계열 (2학년)</h2>
-            <button onclick="showResult('물리2, 화학2 or 지구2 선택, 빅데이터 선택')">추천 과목 보기</button>
-        </div>
         
         <div id="result" class="result">
             <h2>추천 과목</h2>
@@ -138,8 +128,11 @@
         }
 
         function selectSubCategory(year, subCategory) {
-            document.querySelectorAll('.question').forEach(el => el.classList.remove('active'));
-            document.getElementById(`question4_${year}_${subCategory.replace(', ', '_')}`).classList.add('active');
+            if (subCategory === '공과') {
+                showResult('물리2, 화학2 or 지구2 선택, 공학일반 선택');
+            } else if (subCategory === '컴퓨터') {
+                showResult('물리2, 화학2 or 지구2 선택, 빅데이터 선택');
+            }
         }
 
         function showResult(recommendedSubject) {
