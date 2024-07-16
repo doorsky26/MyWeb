@@ -91,10 +91,6 @@
         </div>
 
         <!-- 2학년 질문 -->
-        <div id="question3_2학년_인문" class="question">
-            <h2>인문계열 (2학년)</h2>
-            <button onclick="showResult('지리, 사문, 윤사, 정법 중 선택')">과목 선택 완료</button>
-        </div>
         <div id="question3_2학년_자연" class="question">
             <h2>자연계열 (2학년)</h2>
             <button onclick="selectSubCategory('2학년', '공과')">공과</button>
@@ -123,8 +119,12 @@
         }
 
         function selectCategory(year, category) {
-            document.querySelectorAll('.question').forEach(el => el.classList.remove('active'));
-            document.getElementById(`question3_${year}_${category}`).classList.add('active');
+            if (year === '2학년' && category === '인문') {
+                showResult('지리, 사문, 윤사, 정법 중 선택');
+            } else {
+                document.querySelectorAll('.question').forEach(el => el.classList.remove('active'));
+                document.getElementById(`question3_${year}_${category}`).classList.add('active');
+            }
         }
 
         function selectSubCategory(year, subCategory) {
